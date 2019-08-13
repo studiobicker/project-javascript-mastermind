@@ -1,0 +1,225 @@
+/* ## Box Sizing
+--------------------------------------------- */
+* {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+} 
+
+/* ## Float Clearing
+--------------------------------------------- */
+.clearfix:before {
+	content: " ";
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+	content: " ";
+	display: table;
+}
+
+/* Typographical Elements
+--------------------------------------------- */
+body {
+  background-color: #fffcfb;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.625;
+  color: #5b6c94;
+}
+
+p {
+  margin: 0 0 1.5em;
+}
+ul {
+  margin: 0 0 1.5em 1.5em;
+}
+
+
+.gradient-background {
+  background-image: linear-gradient(48deg, #f48d53, #f45353);
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+}
+
+#app {
+  margin-top: 20px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 20px;
+  max-width: 320px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 34px 0 rgba(210, 210, 210, 0.5);
+}
+
+h1 {
+  font-size: 30px;
+  line-height: 1.33;
+  font-weight: 700;
+  color: #f8765e;
+}
+
+/* Site Navigation
+--------------------------------------------- */
+
+.site-navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+}
+.site-navigation .logo {
+  font-family: 'Roboto', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #f8765e;
+  text-transform: uppercase;
+  padding-top: 10px;
+}
+.main-navigation {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  width: 100%;
+  padding-top: 10px;
+  margin: 0;
+}
+.main-navigation a {
+  color: #031d5b;
+  text-decoration: none;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+/* Game Elements
+--------------------------------------------- */
+#game {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Game Board */
+#game-board .row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 5px 0;
+}
+
+#game-board .row::before {
+  content: "";
+  height: 15px;
+  width: 12px;
+  display: inline-block;
+}
+#game-board .active::before {
+  background: url('../images/chevron-right-solid.svg') no-repeat;
+}
+
+.pattern {
+  display: flex;
+  justify-content: flex-start;
+  border-right: 2px solid #D8D8D8;
+  margin-right: 5px;
+}
+.pattern .oval {
+  width: 35px;
+  height: 35px;
+  background-color: #D8D8D8;
+  box-shadow: inset 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  margin: 0px 5px;
+}
+.pattern .oval.selected {
+  background-color: ghostwhite;
+}
+.score {
+  display: flex;
+  flex-wrap: wrap;
+  width: 30px;
+  height: 34px;
+}
+.score .oval {
+  flex: 0 1 auto;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #D8D8D8;
+  border-radius: 50%;
+}
+
+
+/* Game control */
+.game-control {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.color-pegs .oval {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin: 5px 5px 5px 8px;
+}
+
+.oval.red {
+  background-color: #D0021B;
+}
+.oval.blue {
+  background-color: #4AC6E2;
+}
+.oval.green {
+  background-color: #2ED47D;
+}
+.oval.orange {
+  background-color: #F5A623;
+}
+.oval.purple {
+  background-color: #9013FE;
+}
+.oval.pink {
+  background-color: #FAC3DE;
+}
+
+#game-check  {
+  margin: 5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  background-color: #031d5b;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  margin-top: 20px;
+  padding: 24px 6px 8px;
+  cursor: pointer;
+  width: 40px;
+  font-size: 8px;
+}
+#game-check span.icon {
+  background: url('../images/check-solid.svg') no-repeat;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* Game Rules
+--------------------------------------------- */
+#rules {
+  display: none;
+}
