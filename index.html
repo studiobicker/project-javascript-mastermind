@@ -13,157 +13,23 @@
 <body>
   <div class="gradient-background background"></div>
   <div id="app">
-    <nav class="site-navigation">
+    <header class="app-header">
       <h1 class="logo">Mastermind</h1>
+      <section id="clock">
+          <div id="sphere">
+            <span id="minDec" class="number">0</span><span id="minUni" class="number">0</span><span>:</span><span id="secDec" class="number">0</span><span id="secUni" class="number">0</span>
+          </div>
+        </section>
+    </header>
+    <nav class="site-navigation">
       <ul class="main-navigation">
-        <li><a href="#">New game</a></li>
-        <li><a href="#">Rules</a></li>
-        <li><a href="#">Options</a></li>
+        <li class="play">Play</li>
+        <li>Rules</li>
+        <li>Options</li>
       </ul>
     </nav>
     <div id="game">
       <div id="game-board">
-
-<!--         <div class="row active">
-          <div class="pattern">
-            <div class="oval selected"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pattern">
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-            <div class="oval"></div>
-          </div>
-          <div class="score">
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-            <div class="small oval"></div>
-          </div>
-        </div> -->
       </div>
       <div class="game-control">
         <div class="color-pegs">
@@ -175,7 +41,7 @@
           <div data-color="pink" class="oval pink"></div>
         </div>
         <div>
-          <button class="btn"><span class="icon"></span>Check</button>
+          <button class="btn btn-check"><span class="icon"></span>Check</button>
         </div>
       </div>
     </div>

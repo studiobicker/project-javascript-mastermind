@@ -73,15 +73,13 @@ h1 {
 /* Site Navigation
 --------------------------------------------- */
 
-.site-navigation {
+.app-header {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-around;
+  align-items: baseline;
   width: 100%;
-
 }
-.site-navigation .logo {
+.app-header .logo {
   font-family: 'Roboto', sans-serif;
   font-size: 26px;
   font-weight: 900;
@@ -97,11 +95,12 @@ h1 {
   padding-top: 10px;
   margin: 0;
 }
-.main-navigation a {
+.main-navigation li {
   color: #031d5b;
   text-decoration: none;
   padding-left: 18px;
   padding-right: 18px;
+  cursor: pointer;
 }
 
 /* Game Elements
@@ -113,48 +112,34 @@ h1 {
 }
 
 /* Game Board */
-#game-board .row {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 5px 0;
-}
 
-#game-board .row::before {
-  content: "";
-  height: 15px;
+#game-board td.ind {
   width: 12px;
-  display: inline-block;
 }
-#game-board .active::before {
-  background: url('../images/chevron-right-solid.svg') no-repeat;
+#game-board .active td.ind {
+  background: url(../images/chevron-right-solid.svg) no-repeat;
+  background-position: center center;
+  background-size: 10px;
 }
 
-.pattern {
-  display: flex;
-  justify-content: flex-start;
-  border-right: 2px solid #D8D8D8;
-  margin-right: 5px;
+#game-board .active .input td {
+  cursor: pointer;
 }
-.pattern .oval {
+
+.input .oval {
   width: 35px;
   height: 35px;
-  background-color: #D8D8D8;
+  background-color: #eee;
   box-shadow: inset 0 1px 5px 0 rgba(0, 0, 0, 0.15);
   border-radius: 50%;
-  margin: 0px 5px;
 }
-.pattern .oval.selected {
+.input .selected .oval {
   background-color: ghostwhite;
 }
 .score {
-  display: flex;
-  flex-wrap: wrap;
-  width: 30px;
-  height: 34px;
+  padding-left: 10px;
 }
 .score .oval {
-  flex: 0 1 auto;
   width: 15px;
   height: 15px;
   background: #eee;
@@ -162,7 +147,6 @@ h1 {
   box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.15);
   border-radius: 50%;
 }
-
 
 /* Game control */
 .game-control {
@@ -179,29 +163,35 @@ h1 {
   margin: 5px 5px 5px 8px;
 }
 
-.oval.red {
+.oval.red,
+.red .oval {
   background-color: #D0021B;
 }
-.oval.blue {
+.oval.blue,
+.blue .oval {
   background-color: #4AC6E2;
 }
-.oval.green {
+.oval.green,
+.green .oval {
   background-color: #2ED47D;
 }
-.oval.orange {
+.oval.orange,
+.orange .oval {
   background-color: #F5A623;
 }
-.oval.purple {
+.oval.purple,
+.purple .oval {
   background-color: #9013FE;
 }
-.oval.pink {
+.oval.pink,
+.pink .oval {
   background-color: #FAC3DE;
 }
-.oval.good {
+.oval.colorgood {
   background-color: #fff;
   box-shadow: none;
 }
-.oval.great {
+.oval.bothgood {
   background-color: #000;
   box-shadow: none;
 }
