@@ -1,14 +1,21 @@
+let chronometer;
+let mastermindGame;
 
 $(document).ready(function() {
   //Setup the gameboard
   setupGameBoard();
-  setupSoundEffects();
-  playGame();
+  //setupSoundEffects();
+  chronometer = new Chronometer(printTime);
+  startGame();
 
   $(".play").click(function(){
     playSound("startaudio");
     setupGameBoard();
-    playGame();
+    startGame();
+  })
+
+  $(".stopgame").click(function(){
+    $("#game_over").css({'visibility':'hidden','opacity':0});
   })
 });
 
@@ -38,14 +45,14 @@ const setupGameBoard = () => {
   $('#game-board').html(html);
 }
 
-const activateRow = (game,row) => {
+const activateRow = (row) => {
   //add class active to row and class selected to first cell in table inside active row 
   row.addClass("active");
   row.find(".input table td:first").addClass("selected");
 
   //add event listeners to table cells of active rows
   row.find(".input table td").click(function(){
-    clearAndSelect(game,$(this));
+    clearAndSelect($(this));
   });
 }
 
@@ -55,7 +62,7 @@ const deActivateRow = row => {
   row.find(".input table td").off();
 }
 
-const clearAndSelect = (game,tableCell) => {
+const clearAndSelect = (tableCell) => {
   const columnNr = tableCell[0].cellIndex;
 
   //remove value from guessArray
@@ -76,37 +83,43 @@ const isReadyForCheck = (guessArray) => {
   return true;
 }
 
-const playGame = () => {
+const startGame = () => {
   resetGameDOM();
 
-  const mastermindGame = new MastermindGame();
+  mastermindGame = new MastermindGame();
   mastermindGame.generateSecretCode();
 
-  const chronometer = new Chronometer(printTime);
+  //stop the 'previous' chronometer when you restart the game
+  if(chronometer) {
+    chronometer.stopClick();
+    chronometer.resetClick();
+  }
   chronometer.startClick();
 
   //temporary show the secret code in the footer
   $("footer p").html(mastermindGame.secretCode);
 
   //activate the first row
-  activateRow(mastermindGame,$("table tr:first"));
+  activateRow($("table tr:first"));
 
   $(".color-pegs .oval").click(function(){
     const colorPeg = $(this).data("color");
 
     //get column number of selected tableCell
     const tableCell = $(".active .selected");
-    const columnNr = tableCell[0].cellIndex;
+    if (tableCell.length > 0) {
+      const columnNr = tableCell[0].cellIndex;
 
-    $(".active .selected").addClass(colorPeg).removeClass("selected");
+      $(".active .selected").addClass(colorPeg).removeClass("selected");
 
-    mastermindGame.saveGuess(columnNr,colorPeg);
+      mastermindGame.saveGuess(columnNr,colorPeg);
 
-    playSound("coloraudio");
-  
-    //add class 'selected' to first empty tableCell
-    const tableRow = tableCell.parent();
-    tableRow.find("td:not([class]):first").addClass("selected");
+      playSound("coloraudio");
+    
+      //add class 'selected' to first empty tableCell
+      const tableRow = tableCell.parent();
+      tableRow.find("td:not([class]):first").addClass("selected");
+    }
   })
 
   $(".btn-check").click(function(){
@@ -126,16 +139,14 @@ const playGame = () => {
         const nextRow = currentRow.closest('tr').next('tr');
         //check if game is finished
         if (mastermindGame.isFinished()) {
-          deActivateRow(currentRow);
-          //$(".btn-check, .color-pegs .oval").off();
           resetGameDOM();
           chronometer.stopClick();
+          $("#game_over").css({'visibility':'visible','opacity':1});
           playSound("successaudio");
-          alert('game over');
         } else {
           //de-activate the row and activate the next row
           deActivateRow(currentRow);
-          activateRow(mastermindGame,nextRow);
+          activateRow(nextRow);
           //empty the guess array before the next guess
           mastermindGame.resetGuess();
         }
@@ -145,7 +156,7 @@ const playGame = () => {
 }
 
 const resetGameDOM = () => {
-  $(".btn-check, .color-pegs .oval,.input table td").off();
+  $(".btn-check, .color-pegs .oval,.input table td").off().css({cursor:'unset'});
 }
 
 const printTime = (minutes,seconds) => {
