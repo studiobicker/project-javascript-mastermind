@@ -1,11 +1,11 @@
 class MastermindGame {
-  constructor(colors) {
-    this.colors = colors;
+  constructor() {
+    this.colors = ["red", "blue", "green", "orange", "purple", "pink"];
+    this.guess = [null, null, null, null];
     this.secretCode = [];
     this.numCorrect = 0;
     this.numRows = 10;
     this.nextRow = 0;
-
   }
 
   generateSecretCode() {
@@ -14,23 +14,37 @@ class MastermindGame {
       this.secretCode[i] = this.colors[Math.floor( Math.random() * this.colors.length )];
     }
   }
-
-  scoreGuess(guess) {
-    this.nextRow++
+  scoreGuess() {
     const score = [];
+    let copySecretCode = [...this.secretCode];
     let scoreCorrect = 0;
-    for (let i=0;i<guess.length;i++) {
-      if (this.secretCode.indexOf(guess[i]) === -1 ) {
-        score[i] = null;
-      } else if (this.secretCode[i] === guess[i]) {
-        score[i] = "bothgood";
+    
+    //check if color and position is correct. 
+    for (let i=0;i<4;i++) {
+      if(this.guess[i] === copySecretCode[i]) {
         scoreCorrect++;
-      } else {
-        score[i] = "colorgood";
+        score.push('black');
+        this.guess[i] = copySecretCode[i] = NaN;
+      }
+    } 
+    //check if color is correct
+    for (let j=0;j<4;j++) {
+      for(let k=0;k<4;k++) {
+        if(this.guess[j] === copySecretCode[k]) {
+          score.push('white');
+          this.guess[j] = copySecretCode[k] = NaN;
+        }
       }
     }
     this.numCorrect = scoreCorrect;
-    return score.sort();
+    this.nextRow++
+    return score;
+  }
+  saveGuess(i,color) {
+    this.guess[i] = color;
+  }
+  resetGuess() {
+    this.guess = [null,null,null,null];
   }
 
   isFinished(){
@@ -50,7 +64,7 @@ class Chronometer {
   }
   
   startClick() {
-    this.intervalId = setInterval(()=>{
+    this.intervalId = setInterval(() => {
       //debugger;
       this.currentTime++
       this.showTime(...this.setTime())

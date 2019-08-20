@@ -161,6 +161,7 @@ h1 {
   height: 35px;
   border-radius: 50%;
   margin: 5px 5px 5px 8px;
+  cursor: pointer;
 }
 
 .oval.red,
@@ -187,11 +188,11 @@ h1 {
 .pink .oval {
   background-color: #FAC3DE;
 }
-.oval.colorgood {
+.oval.white {
   background-color: #fff;
   box-shadow: none;
 }
-.oval.bothgood {
+.oval.black {
   background-color: #000;
   box-shadow: none;
 }

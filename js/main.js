@@ -1,56 +1,15 @@
-const colors = ["red", "blue", "green", "orange", "purple", "pink"];
-const mastermindGame = new MastermindGame(colors);
-mastermindGame.generateSecretCode();
-let guess = [null, null, null, null];
 
 $(document).ready(function() {
-  //temporary show the secret code in the footer
-  $("footer p").html(mastermindGame.secretCode);
-
   //Setup the gameboard
   setupGameBoard();
-  const tableRow = $("table tr:first");
-  //Activate the first row
-  activateRow(tableRow);
+  setupSoundEffects();
+  playGame();
 
-  $(".color-pegs .oval").click(function(){
-
-    setColor($(this));
+  $(".play").click(function(){
+    playSound("startaudio");
+    setupGameBoard();
+    playGame();
   })
-
-  $(".btn-check").click(function(){
-
-    if ( isReadyForCheck(guess) ) {
-      //check the score of the guess
-      const scoreResult = mastermindGame.scoreGuess(guess);
-      const scoreOvals = $(".active .score .oval");
-
-      //display scores
-      for (let i=0;i<scoreResult.length;i++) {
-        $(scoreOvals[i]).addClass(scoreResult[i]);
-      }
-
-      setTimeout(function(){
-        const currentRow = $(".active");
-        const nextRow = currentRow.closest('tr').next('tr');
-        //check if game is finished
-        if (mastermindGame.isFinished()) {
-          deActivateRow(currentRow);
-          $(".btn-check, .color-pegs .oval").off();
-          alert('game over');
-        } else {
-          //de-activate the row and activate the next row
-          deActivateRow(currentRow);
-          activateRow(nextRow);
-          //empty the guess array before the next guess
-          guess = [null,null,null,null];
-        }
-      }, 100);
-
-
-    }
-  });  
-
 });
 
 const setupGameBoard = () => {
@@ -77,17 +36,16 @@ const setupGameBoard = () => {
   }
   html += '</table>';
   $('#game-board').html(html);
-
 }
 
-const activateRow = row => {
+const activateRow = (game,row) => {
   //add class active to row and class selected to first cell in table inside active row 
   row.addClass("active");
   row.find(".input table td:first").addClass("selected");
 
   //add event listeners to table cells of active rows
   row.find(".input table td").click(function(){
-    clearAndSelect($(this));
+    clearAndSelect(game,$(this));
   });
 }
 
@@ -97,24 +55,11 @@ const deActivateRow = row => {
   row.find(".input table td").off();
 }
 
-const setColor = color => {
-  const colorPeg = color.data("color");
-  const tableCell = $(".active .selected");
-  const columnNr = tableCell[0].cellIndex;
-  const tableRow = tableCell.parent();
-
-  $(".active .selected").addClass(colorPeg).removeClass("selected");
-  guess[columnNr] = colorPeg;
-
-  // add class 'selected' to first empty tableCell
-  tableRow.find("td:not([class]):first").addClass("selected");
-}
-
-const clearAndSelect = tableCell => {
+const clearAndSelect = (game,tableCell) => {
   const columnNr = tableCell[0].cellIndex;
 
   //remove value from guessArray
-  guess[columnNr] = null;
+  game.saveGuess(columnNr,null);
   //remove class 'selected' from other tableCell
   tableCell.parent().find("td.selected").removeAttr("class");
   //remove color from current tableCell and add class selected to current tableCell
@@ -129,4 +74,101 @@ const isReadyForCheck = (guessArray) => {
     }
   }
   return true;
+}
+
+const playGame = () => {
+  resetGameDOM();
+
+  const mastermindGame = new MastermindGame();
+  mastermindGame.generateSecretCode();
+
+  const chronometer = new Chronometer(printTime);
+  chronometer.startClick();
+
+  //temporary show the secret code in the footer
+  $("footer p").html(mastermindGame.secretCode);
+
+  //activate the first row
+  activateRow(mastermindGame,$("table tr:first"));
+
+  $(".color-pegs .oval").click(function(){
+    const colorPeg = $(this).data("color");
+
+    //get column number of selected tableCell
+    const tableCell = $(".active .selected");
+    const columnNr = tableCell[0].cellIndex;
+
+    $(".active .selected").addClass(colorPeg).removeClass("selected");
+
+    mastermindGame.saveGuess(columnNr,colorPeg);
+
+    playSound("coloraudio");
+  
+    //add class 'selected' to first empty tableCell
+    const tableRow = tableCell.parent();
+    tableRow.find("td:not([class]):first").addClass("selected");
+  })
+
+  $(".btn-check").click(function(){
+    if ( isReadyForCheck(mastermindGame.guess) ) {
+      //check the score of the guess
+      const scoreResult = mastermindGame.scoreGuess();
+      const scoreOvals = $(".active .score .oval");
+
+      //display scores
+      for (let i=0;i<scoreResult.length;i++) {
+          $(scoreOvals[i]).addClass(scoreResult[i]);
+          playSound("scoreaudio");
+      }
+
+      setTimeout(function(){
+        const currentRow = $(".active");
+        const nextRow = currentRow.closest('tr').next('tr');
+        //check if game is finished
+        if (mastermindGame.isFinished()) {
+          deActivateRow(currentRow);
+          //$(".btn-check, .color-pegs .oval").off();
+          resetGameDOM();
+          chronometer.stopClick();
+          playSound("successaudio");
+          alert('game over');
+        } else {
+          //de-activate the row and activate the next row
+          deActivateRow(currentRow);
+          activateRow(mastermindGame,nextRow);
+          //empty the guess array before the next guess
+          mastermindGame.resetGuess();
+        }
+      }, 100);
+    }
+  });  
+}
+
+const resetGameDOM = () => {
+  $(".btn-check, .color-pegs .oval,.input table td").off();
+}
+
+const printTime = (minutes,seconds) => {
+  printMinutes(minutes);
+  printSeconds(seconds);
+ }
+ 
+ const printMinutes = min => {
+   sMin = min.toString();
+   $("#minDec").html(sMin.charAt(0));
+   $("#minUni").html(sMin.charAt(1));
+ }
+ 
+ const printSeconds = sec => {
+   sSec = sec.toString();
+   $("#secDec").html(sSec.charAt(0));
+   $("#secUni").html(sSec.charAt(1));
+ }
+ 
+const setupSoundEffects = () => {
+  
+}
+ const playSound = sound => {
+  var sound = document.getElementById(sound);
+  sound.play()
 }
