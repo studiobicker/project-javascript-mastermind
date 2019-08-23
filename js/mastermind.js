@@ -1,6 +1,7 @@
 class MastermindGame {
-  constructor() {
-    this.colors = ["red", "blue", "green", "orange", "purple", "pink"];
+  constructor(sameColor, colors) {
+    this.sameColor = sameColor;
+    this.colors = colors;
     this.guess = [null, null, null, null];
     this.secretCode = [];
     this.numCorrect = 0;
@@ -9,9 +10,13 @@ class MastermindGame {
   }
 
   generateSecretCode() {
-    //randomly choose 4 colors from the six available colors
+    //randomly choose 4 colors from the six/seven/eight available colors
     for (let i=0;i < 4;i++) {
-      this.secretCode[i] = this.colors[Math.floor( Math.random() * this.colors.length )];
+      let random = Math.floor( Math.random() * this.colors.length );
+      this.secretCode[i] = this.colors[random];
+      if (!this.sameColor) {
+        this.colors.splice(random,1);
+      }
     }
   }
   scoreGuess() {

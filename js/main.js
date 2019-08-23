@@ -1,25 +1,66 @@
 let chronometer;
 let mastermindGame;
+let startAudio;
+let colorAudio;
+let scoreAudio;
+let successAudio;
+let failAudio;
+
 
 $(document).ready(function() {
-  //Setup the gameboard
-  setupGameBoard();
-  //setupSoundEffects();
+  //Initialise the chronometer
   chronometer = new Chronometer(printTime);
+
+  //Set the sound effects
+  startAudio = $("#startaudio");
+  colorAudio = $("#coloraudio");
+  scoreAudio = $("#scoreaudio");
+  successAudio = $("#successaudio");
+  failAudio = $("#failaudio");
+
+  //Start the game on window load
   startGame();
 
-  $(".play").click(function(){
-    playSound("startaudio");
-    setupGameBoard();
+  //(re-)start the game when New Game is clicked
+  $(".play").click(function() {
+    $("#game_over").css({'visibility':'hidden','opacity':0});
+    $('#game-board').html(gameBoardHTML());
+
+    playSound(startAudio);
     startGame();
   })
 
+  //Handle navigation links
+  $(".link").click(function(){
+    const $this = $(this);
+    const showContent = $this.data("id");
+    $(showContent).addClass("toggled-on");
+  })
+
+  $(".close").click(function(){
+    const $this = $(this);
+    const hideContent = $this.data("id");
+    $(hideContent).removeClass();
+  })
+
+
+  //Stop playing the game after you finished a game
   $(".stopgame").click(function(){
     $("#game_over").css({'visibility':'hidden','opacity':0});
   })
+
+  $('#soundSwitch').change(function() {
+    if ($(this).is(":checked")) {
+      soundOn = true;  //it is checked
+    } else {
+      soundOn = false;
+    }
+    soundToggle(soundOn);
+  });
+
 });
 
-const setupGameBoard = () => {
+const gameBoardHTML = () => {
   let html = '';
   html += '<table class="board">';
   for (let i=0;i<10;i++) {
@@ -42,62 +83,44 @@ const setupGameBoard = () => {
     html += '</table></td>';
   }
   html += '</table>';
-  $('#game-board').html(html);
+
+  return html;
 }
 
-const activateRow = (row) => {
-  //add class active to row and class selected to first cell in table inside active row 
-  row.addClass("active");
-  row.find(".input table td:first").addClass("selected");
-
-  //add event listeners to table cells of active rows
-  row.find(".input table td").click(function(){
-    clearAndSelect($(this));
-  });
-}
-
-const deActivateRow = row => {
-  //remove class and event listeners from tablerow
-  row.removeClass("active");
-  row.find(".input table td").off();
-}
-
-const clearAndSelect = (tableCell) => {
-  const columnNr = tableCell[0].cellIndex;
-
-  //remove value from guessArray
-  game.saveGuess(columnNr,null);
-  //remove class 'selected' from other tableCell
-  tableCell.parent().find("td.selected").removeAttr("class");
-  //remove color from current tableCell and add class selected to current tableCell
-  tableCell.removeClass().addClass("selected");
-
-}
-
-const isReadyForCheck = (guessArray) => {
-  for (let color of guessArray) {
-    if (!color) {
-      return false;
-    }
+const colorPegsHTML = levelArr => {
+  let html = '';
+  for (let i=0;i<levelArr.length;i++) {
+    html += `<div data-color="${levelArr[i]}" class="oval ${levelArr[i]}"></div>`
   }
-  return true;
+  return html;
 }
 
 const startGame = () => {
-  resetGameDOM();
+  //Setup the gameboard
+  $('#game-board').html(gameBoardHTML());
 
-  mastermindGame = new MastermindGame();
+  //Setup level (=number of colors) of game
+  const beginner = ["red", "blue", "green", "orange", "purple", "pink"];
+  const intermediate = ["red", "blue", "green", "orange", "purple", "pink", "yellow"];
+  const advanced = ["red", "blue", "green", "orange", "purple", "pink", "yellow", "grey"];
+  const level =  $( "#level" ).val();
+  $('.game-control .color-pegs').html(colorPegsHTML(eval(level)));
+
+  //Create instance of the game
+  mastermindGame = new MastermindGame(getOption("#sameColor"), eval(level));
   mastermindGame.generateSecretCode();
 
-  //stop the 'previous' chronometer when you restart the game
+  //Start the chronometer and stop the 'previous' chronometer when you restart the game
   if(chronometer) {
     chronometer.stopClick();
     chronometer.resetClick();
   }
   chronometer.startClick();
 
-  //temporary show the secret code in the footer
-  $("footer p").html(mastermindGame.secretCode);
+  //show the secret code in the source code if debug option is on
+  if(getOption("#debug")) {
+    $("body").append(`<!--${mastermindGame.secretCode}-->`);
+  }
 
   //activate the first row
   activateRow($("table tr:first"));
@@ -114,7 +137,7 @@ const startGame = () => {
 
       mastermindGame.saveGuess(columnNr,colorPeg);
 
-      playSound("coloraudio");
+      playSound(colorAudio);
     
       //add class 'selected' to first empty tableCell
       const tableRow = tableCell.parent();
@@ -131,22 +154,31 @@ const startGame = () => {
       //display scores
       for (let i=0;i<scoreResult.length;i++) {
           $(scoreOvals[i]).addClass(scoreResult[i]);
-          playSound("scoreaudio");
+          playSound(scoreAudio);
       }
 
       setTimeout(function(){
         const currentRow = $(".active");
         const nextRow = currentRow.closest('tr').next('tr');
+        let gameOverAudio;
+   
         //check if game is finished
         if (mastermindGame.isFinished()) {
           resetGameDOM();
           chronometer.stopClick();
-          $("#game_over").css({'visibility':'visible','opacity':1});
-          playSound("successaudio");
+
+          if(mastermindGame.numCorrect === 4 ) {
+            $("#game_over h2").html("You won!!!");
+            gameOverAudio = successAudio;
+          } else {
+            $("#game_over h2").html("Game over");
+            gameOverAudio = failAudio;
+          }
+          $("#game_over").css({'visibility':'visible','opacity':1});         
+          playSound(gameOverAudio);
         } else {
-          //de-activate the row and activate the next row
-          deActivateRow(currentRow);
-          activateRow(nextRow);
+          //de-activate the current row and activate the next row
+          activateRow(nextRow,currentRow);
           //empty the guess array before the next guess
           mastermindGame.resetGuess();
         }
@@ -155,31 +187,83 @@ const startGame = () => {
   });  
 }
 
+const activateRow = (nextrow,currow) => {
+  if (currow) {
+    //remove class and event listeners from tablerow
+    currow.removeClass("active");
+    currow.find(".input table td").off();
+  }
+  //add class active to row and class selected to first cell in table inside active row 
+  nextrow.addClass("active");
+  nextrow.find(".input table td:first").addClass("selected");
+
+  //add event listeners to table cells of active rows
+  nextrow.find(".input table td").click(function(){
+    clearAndSelect($(this));
+  });
+}
+
+const clearAndSelect = (tableCell) => {
+  const columnNr = tableCell[0].cellIndex;
+
+  //remove value from guessArray
+  mastermindGame.saveGuess(columnNr,null);
+  //remove class 'selected' from other tableCell
+  tableCell.parent().find("td.selected").removeAttr("class");
+  //remove color from current tableCell and add class selected to current tableCell
+  tableCell.removeClass().addClass("selected");
+
+}
+
+const isReadyForCheck = (guessArray) => {
+  for (let color of guessArray) {
+    if (!color) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const resetGameDOM = () => {
-  $(".btn-check, .color-pegs .oval,.input table td").off().css({cursor:'unset'});
+  $(".btn-check, .color-pegs .oval,.input table td").off();
 }
 
 const printTime = (minutes,seconds) => {
   printMinutes(minutes);
   printSeconds(seconds);
  }
- 
- const printMinutes = min => {
-   sMin = min.toString();
-   $("#minDec").html(sMin.charAt(0));
-   $("#minUni").html(sMin.charAt(1));
- }
- 
- const printSeconds = sec => {
-   sSec = sec.toString();
-   $("#secDec").html(sSec.charAt(0));
-   $("#secUni").html(sSec.charAt(1));
- }
- 
-const setupSoundEffects = () => {
-  
+
+const printMinutes = min => {
+  sMin = min.toString();
+  $("#minDec").html(sMin.charAt(0));
+  $("#minUni").html(sMin.charAt(1));
 }
- const playSound = sound => {
-  var sound = document.getElementById(sound);
-  sound.play()
+
+const printSeconds = sec => {
+  sSec = sec.toString();
+  $("#secDec").html(sSec.charAt(0));
+  $("#secUni").html(sSec.charAt(1));
+}
+ 
+const soundToggle = soundOn => {
+  $('audio').each(function(){
+    if (!soundOn ) {
+      $(this).prop("muted",true);
+    } else {
+      $(this).prop('muted',false);
+    }
+  });
+};
+
+const playSound = sound => {
+  sound[0].play();
+}
+
+const getOption = (option) => {
+  let optionValue = false;
+  if ($(option).is(":checked")) {
+    optionValue = true;  //it is checked
+  }
+  return optionValue;
+
 }

@@ -12,57 +12,111 @@
 
 <body>
   <div class="gradient-background background"></div>
-    <div id="app">
+  <div id="app">
     <header class="app-header">
       <h1 class="logo">Mastermind</h1>
       <section id="clock">
-          <div id="sphere">
-            <span id="minDec" class="number">0</span><span id="minUni" class="number">0</span><span>:</span><span id="secDec" class="number">0</span><span id="secUni" class="number">0</span>
-          </div>
-        </section>
+        <div id="sphere">
+          <span id="minDec" class="number">0</span><span id="minUni" class="number">0</span><span>:</span><span
+            id="secDec" class="number">0</span><span id="secUni" class="number">0</span>
+        </div>
+      </section>
     </header>
     <nav class="site-navigation">
       <ul class="main-navigation">
         <li class="play">New game</li>
-        <li>Rules</li>
-        <li>Options</li>
+        <li class="link rules" data-id="#rules">Rules</li>
+        <li class="link options" data-id="#options">Options</li>
       </ul>
     </nav>
-    <div id="game">
-      <audio id="coloraudio" src="./sounds/color_click.mp3" mute="false" name="color" autostart="false" ></audio>
-      <audio id="scoreaudio" src="./sounds/score_click.mp3" mute="false" name="score" autostart="false" ></audio>
-      <audio id="startaudio" src="./sounds/start_click.mp3" mute="false" name="start" autostart="false" ></audio>
-      <audio id="successaudio" src="./sounds/success_click.mp3" mute="false" name="success" autostart="false" ></audio>
-      
+    <section id="game">
+      <audio id="coloraudio" src="./sounds/color_click.mp3" name="color" autostart="false"></audio>
+      <audio id="scoreaudio" src="./sounds/score_click.mp3" name="score" autostart="false"></audio>
+      <audio id="startaudio" src="./sounds/start_click.mp3" name="start" autostart="false"></audio>
+      <audio id="successaudio" src="./sounds/success_click.mp3" name="success" autostart="false"></audio>
+      <audio id="failaudio" src="./sounds/fail_click.mp3" name="fail" autostart="false"></audio>
+
       <div id="game-board">
       </div>
       <div class="game-control">
         <div class="color-pegs">
-          <div data-color="red" class="oval red"></div>
-          <div data-color="blue" class="oval blue"></div>
-          <div data-color="green" class="oval green"></div>
-          <div data-color="orange" class="oval orange"></div>
-          <div data-color="purple" class="oval purple"></div>
-          <div data-color="pink" class="oval pink"></div>
         </div>
         <div>
           <button class="btn btn-check"><span class="icon"></span>Check</button>
         </div>
       </div>
-    </div>
-    <footer>
-      <p></p>
-    </footer>
+    </section>
     <section id="game_over">
-      <h2>You Won!!!!</h2>
+      <h2></h2>
       <button id="newgame" class="btn play">New Game</button> <a href="#" class="stopgame">No, please stop</a>
     </section>
     <section id="rules">
-      <h2>The Rules</h2>
-      <p>The goal is to guess a secret color code.</p>
+      <header class="app-header">
+        <h2>Game rules</h2>
+        <div class="close" data-id="#rules">
+          <span></span>
+          <span></span>
+        </div>
+      </header>
+      <div class="content">
+        <p>Mastermind is a classic puzzle game. The goal is to guess a hidden color code. Your opponent (the computer)
+          creates a combination of four colors and hides it. Your challenge is to guess this color code by trying out
+          different color combinations.</p>
+        <p>After you place your color tiles on the board, click teh 'Check' button. A black or white dot will then appear to the right of your choices.</p>
+        <ul>
+          <li>Black dot: correct color and correct position</li>
+          <li>White dot: correct color, wrong position</li>
+        </ul>
+        <p>Place your color tiles by clicking them. To remove a color tile, simply click on it again. </p>
+        <p><a href=”https://www.zapsplat.com” target="_blank">Sound effects obtained from zapsplat.com</a></p>
+      </div>
+    </section>
+    <section id="options">
+      <header class="app-header">
+        <h2>Options</h2>
+        <div class="close" data-id="#options">
+          <span></span>
+          <span></span>
+        </div>
+      </header>
+      <div class="content">
+        <div class="option-row">
+          <h3>Sound</h3>
+          <label class="switch">
+            <input type="checkbox" id="soundSwitch" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="option-row">
+          <h3>Same Color</h3>
+          <label class="switch">
+            <input type="checkbox" id="sameColor" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <p>
+          The secret code can contain the same color more than once.
+        </p>
+        <div class="option-row">
+            <h3>Level</h3>
+            <select id="level" class="select-css">
+              <option value="beginner">Beginner (6 col)</option>
+              <option value="intermediate">Intermediate (7 col)</option>
+              <option value="advanced">Advanced (8 col)</option>
+            </select>
+          </div>
+        <div class="option-row">
+          <h3>Debug</h3>
+          <label class="switch">
+            <input type="checkbox" id="debug">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
     </section>
   </div>
-
+  <div class="creditinfo"><img src="images/github.svg"><a href="https://github.com/studiobicker/project-javascript-mastermind" target="blank">
+    GitHub</a></div>
   <script src="js/jquery-3.4.1.min.js"></script>
   <script src="js/mastermind.js"></script>
   <script src="js/main.js"></script>
