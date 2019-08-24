@@ -11,11 +11,11 @@ class MastermindGame {
 
   generateSecretCode() {
     //randomly choose 4 colors from the six/seven/eight available colors
-    for (let i=0;i < 4;i++) {
-      let random = Math.floor( Math.random() * this.colors.length );
+    for (let i = 0; i < 4; i++) {
+      let random = Math.floor(Math.random() * this.colors.length);
       this.secretCode[i] = this.colors[random];
       if (!this.sameColor) {
-        this.colors.splice(random,1);
+        this.colors.splice(random, 1);
       }
     }
   }
@@ -23,86 +23,85 @@ class MastermindGame {
     const score = [];
     let copySecretCode = [...this.secretCode];
     let scoreCorrect = 0;
-    
-    //check if color and position is correct. 
-    for (let i=0;i<4;i++) {
-      if(this.guess[i] === copySecretCode[i]) {
+
+    //check if color and position is correct.
+    for (let i = 0; i < 4; i++) {
+      if (this.guess[i] === copySecretCode[i]) {
         scoreCorrect++;
-        score.push('black');
+        score.push("black");
         this.guess[i] = copySecretCode[i] = NaN;
       }
-    } 
+    }
     //check if color is correct
-    for (let j=0;j<4;j++) {
-      for(let k=0;k<4;k++) {
-        if(this.guess[j] === copySecretCode[k]) {
-          score.push('white');
+    for (let j = 0; j < 4; j++) {
+      for (let k = 0; k < 4; k++) {
+        if (this.guess[j] === copySecretCode[k]) {
+          score.push("white");
           this.guess[j] = copySecretCode[k] = NaN;
         }
       }
     }
     this.numCorrect = scoreCorrect;
-    this.nextRow++
+    this.nextRow++;
     return score;
   }
-  saveGuess(i,color) {
+  saveGuess(i, color) {
     this.guess[i] = color;
   }
   resetGuess() {
-    this.guess = [null,null,null,null];
+    this.guess = [null, null, null, null];
   }
 
-  isFinished(){
-    if(this.numRows === this.nextRow || this.numCorrect === 4) {
+  isFinished() {
+    if (this.numRows === this.nextRow || this.numCorrect === 4) {
       return true;
     } else {
       return false;
     }
-  } 
+  }
 }
 
 class Chronometer {
   constructor(show) {
     this.currentTime = 0;
     this.intervalId = null;
-    this.showTime = show
+    this.showTime = show;
   }
-  
+
   startClick() {
     this.intervalId = setInterval(() => {
       //debugger;
-      this.currentTime++
-      this.showTime(...this.setTime())
-    },1000);
+      this.currentTime++;
+      this.showTime(...this.setTime());
+    }, 1000);
   }
-  
+
   getMinutes() {
     const minutes = Math.floor(this.currentTime / 60);
     return minutes;
   }
-  
+
   getSeconds() {
     const seconds = this.currentTime - this.getMinutes() * 60;
     return seconds;
   }
-  
+
   twoDigitsNumber(aNum) {
-    const twoDigits = aNum.toString().length > 1 ? aNum : "0"+aNum;
+    const twoDigits = aNum.toString().length > 1 ? aNum : "0" + aNum;
     return twoDigits;
   }
 
   setTime() {
     const minutes = this.twoDigitsNumber(this.getMinutes());
     const seconds = this.twoDigitsNumber(this.getSeconds());
-    return [minutes,seconds];
+    return [minutes, seconds];
   }
 
   stopClick() {
     clearInterval(this.intervalId);
   }
-  
+
   resetClick() {
     this.currentTime = 0;
   }
-
 }

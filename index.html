@@ -62,7 +62,8 @@
         <p>Mastermind is a classic puzzle game. The goal is to guess a hidden color code. Your opponent (the computer)
           creates a combination of four colors and hides it. Your challenge is to guess this color code by trying out
           different color combinations.</p>
-        <p>After you place your color tiles on the board, click teh 'Check' button. A black or white dot will then appear to the right of your choices.</p>
+        <p>After you place your color tiles on the board, click teh 'Check' button. A black or white dot will then
+          appear to the right of your choices.</p>
         <ul>
           <li>Black dot: correct color and correct position</li>
           <li>White dot: correct color, wrong position</li>
@@ -90,7 +91,7 @@
         <div class="option-row">
           <h3>Same Color</h3>
           <label class="switch">
-            <input type="checkbox" id="sameColor" checked>
+            <input type="checkbox" id="sameColorSwitch" checked>
             <span class="slider round"></span>
           </label>
         </div>
@@ -98,25 +99,26 @@
           The secret code can contain the same color more than once.
         </p>
         <div class="option-row">
-            <h3>Level</h3>
-            <select id="level" class="select-css">
-              <option value="beginner">Beginner (6 col)</option>
-              <option value="intermediate">Intermediate (7 col)</option>
-              <option value="advanced">Advanced (8 col)</option>
-            </select>
-          </div>
+          <h3>Level</h3>
+          <select id="levelSwitch" class="select-css">
+            <option value="beginner">Beginner (6 col)</option>
+            <option value="intermediate">Intermediate (7 col)</option>
+            <option value="advanced">Advanced (8 col)</option>
+          </select>
+        </div>
         <div class="option-row">
           <h3>Debug</h3>
           <label class="switch">
-            <input type="checkbox" id="debug">
+            <input type="checkbox" id="debugSwitch">
             <span class="slider round"></span>
           </label>
         </div>
       </div>
     </section>
   </div>
-  <div class="creditinfo"><img src="images/github.svg"><a href="https://github.com/studiobicker/project-javascript-mastermind" target="blank">
-    GitHub</a></div>
+  <div class="creditinfo"><img src="images/github.svg"><a
+      href="https://github.com/studiobicker/project-javascript-mastermind" target="blank">
+      GitHub</a></div>
   <script src="js/jquery-3.4.1.min.js"></script>
   <script src="js/mastermind.js"></script>
   <script src="js/main.js"></script>
